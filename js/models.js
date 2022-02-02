@@ -2,6 +2,10 @@
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
 
+// js/models.js contains classes to manage the data of the app and the connection to the API. 
+// The name models.js to describe a file containing these kinds of classes that 
+// focus on the data and logic about the data. UI stuff shouldn’t go here.
+
 /******************************************************************************
  * Story: a single story in the system
  */
@@ -58,10 +62,9 @@ class StoryList {
       url: `${BASE_URL}/stories`,
       method: "GET",
     });
-
     // turn plain old story objects from API into instances of Story class
     const stories = response.data.stories.map(story => new Story(story));
-
+  
     // build an instance of our own class using the new array of stories
     return new StoryList(stories);
   }
@@ -73,9 +76,53 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
+  async addStory(user, {author, title, url}) {
+    
     // UNIMPLEMENTED: complete this function!
+    const token=user.loginToken
+    const params={
+      token: token,
+      story:{
+        author:author,
+        title:title,
+        url:url
+      }
+    }
+    
+    const response= await axios.post(`${BASE_URL}/stories`,params)
+    const story=new Story(response.data.story)
+    // console.log("####", response)
+    this.stories.unshift(story);
+    user.ownStories.unshift(story);
+
+    return new Story(response )
   }
+
+ 
+
+
+    /** remove a story */
+  //https://hack-or-snooze-v3.herokuapp.com/stories/storyId
+  async removeAStory(storyId, user){
+    const token=user.loginToken
+    await axios({
+      url:`https://hack-or-snooze-v3.herokuapp.com/stories/${storyId}`,
+      method:'DELETE',
+      params:{token}
+    })
+
+     
+    this.stories = this.stories.filter(story => story.storyId !== storyId);
+  
+    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId);
+    
+    user.favorites = user.favorites.filter(s => s.storyId !== storyId);
+    
+  }
+
+
+
+
 }
 
 
@@ -104,7 +151,7 @@ class User {
     // instantiate Story instances for the user's favorites and ownStories
     this.favorites = favorites.map(s => new Story(s));
     this.ownStories = ownStories.map(s => new Story(s));
-
+    
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
   }
@@ -138,7 +185,6 @@ class User {
   }
 
   /** Login in user with API, make User instance & return it.
-
    * - username: an existing user's username
    * - password: an existing user's password
    */
@@ -193,4 +239,46 @@ class User {
       return null;
     }
   }
+   
+  /** favorite a story */
+  //https://hack-or-snooze-v3.herokuapp.com/users/username/favorites/storyId
+  async addAFavorite(token,username, storyId){
+  //  console.log("######((()()()()" currentUser)
+   await axios({
+      url:`https://hack-or-snooze-v3.herokuapp.com/users/${username}/favorites/${storyId}`,
+      method:'POST',
+      params:{token}
+    })
+     
+    
+  }
+  
+  /** unfavorite a story */
+  //https://hack-or-snooze-v3.herokuapp.com/users/username/favorites/storyId
+  async removeAFavorite(token, username, storyId){
+     await axios({
+      url:`https://hack-or-snooze-v3.herokuapp.com/users/${username}/favorites/${storyId}`,
+      method:'DELETE',
+      params:{token}
+    })
+   
+    
+  }
+
+  /** get a user*/
+  //https://hack-or-snooze-v3.herokuapp.com/users/username
+  // static async getAUserData(username, token){
+   
+  //   const response=await axios({
+  //     url:`https://hack-or-snooze-v3.herokuapp.com/users/${username}`,
+  //     method:'GET',
+  //     params:{token}
+  //   })
+  
+  //   return response
+
+  // }
+
+
+
 }

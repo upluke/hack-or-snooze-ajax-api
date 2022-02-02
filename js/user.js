@@ -1,7 +1,11 @@
 "use strict";
+// js/user.js contains code for UI about logging in/signing up/logging out, as well as
+//  code about remembering a user when they refresh the page and logging them in automatically.
+
+
 
 // global to hold the User instance of the currently-logged-in user
-let currentUser;
+let currentUser; 
 
 /******************************************************************************
  * User login/signup/login
@@ -10,7 +14,7 @@ let currentUser;
 /** Handle login form submission. If login ok, sets up the user instance */
 
 async function login(evt) {
-  console.debug("login", evt);
+  // console.debug("login", evt);
   evt.preventDefault();
 
   // grab the username and password
@@ -25,6 +29,12 @@ async function login(evt) {
 
   saveUserCredentialsInLocalStorage();
   updateUIOnUserLogin();
+
+  // collect favorites ids and save it to local storage
+  const favoritesIdCollection= await generateUserFavoriteList()
+  saveUserFavoritesInLocalStorage(favoritesIdCollection)
+  putStoriesOnPage(); 
+ 
 }
 
 $loginForm.on("submit", login);
@@ -32,7 +42,7 @@ $loginForm.on("submit", login);
 /** Handle signup form submission. */
 
 async function signup(evt) {
-  console.debug("signup", evt);
+  // console.debug("signup", evt);
   evt.preventDefault();
 
   const name = $("#signup-name").val();
@@ -57,9 +67,10 @@ $signupForm.on("submit", signup);
  */
 
 function logout(evt) {
-  console.debug("logout", evt);
+  // console.debug("logout", evt);
   localStorage.clear();
   location.reload();
+  
 }
 
 $navLogOut.on("click", logout);
@@ -73,13 +84,16 @@ $navLogOut.on("click", logout);
  */
 
 async function checkForRememberedUser() {
-  console.debug("checkForRememberedUser");
+  // console.debug("checkForRememberedUser");
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username");
   if (!token || !username) return false;
 
   // try to log in with these credentials (will be null if login failed)
   currentUser = await User.loginViaStoredCredentials(token, username);
+   
+ 
+   
 }
 
 /** Sync current user information to localStorage.
@@ -89,7 +103,7 @@ async function checkForRememberedUser() {
  */
 
 function saveUserCredentialsInLocalStorage() {
-  console.debug("saveUserCredentialsInLocalStorage");
+  // console.debug("saveUserCredentialsInLocalStorage");
   if (currentUser) {
     localStorage.setItem("token", currentUser.loginToken);
     localStorage.setItem("username", currentUser.username);
@@ -108,9 +122,32 @@ function saveUserCredentialsInLocalStorage() {
  */
 
 function updateUIOnUserLogin() {
-  console.debug("updateUIOnUserLogin");
+  // console.debug("updateUIOnUserLogin");
 
   $allStoriesList.show();
-
+  // add star icno to all spans when a user logs in 
+  $('span').addClass('fa fa-star')
   updateNavOnLogin();
+  $loginForm.hide()
+  $signupForm.hide()
+  
 }
+
+
+// /** Sync current user's favorites to localStorage */
+
+// function saveUserFavoritesInLocalStorage(favoritesList){
+//   if(currentUser){
+//     localStorage.setItem("favoritesIds", favoritesList )
+//   }
+// }
+
+// /** Sync current user's stories to localStorage */
+
+// function saveUserStoriesIntoLocalStorage(userStories){
+//   if(currentUser){
+//     localStorage.setItem("userStories",JSON.stringify(userStories ))
+    
+     
+//   }
+// }

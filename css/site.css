@@ -29,7 +29,6 @@ a:hover {
   text-decoration: underline;
 }
 
-
 /* Site layout */
 
 /* This is the basic box that the main part of the page goes into */
@@ -43,7 +42,6 @@ a:hover {
 .hidden {
   display: none;
 }
-
 
 /* Forms */
 
@@ -106,6 +104,43 @@ form > hr {
   width: 70px;
 }
 
+/* no display: flext bc it will confict initial hidden attribute since above already set it  */
+#story-form {
+  flex-flow: row wrap;
+  align-items: center;
+  margin: 1rem auto;
+}
+
+#story-form input {
+  vertical-align: middle;
+  margin: 5px 10px 5px 0;
+  padding: 10px;
+  width: auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+#story-form button {
+  background-color: dodgerblue;
+  border: 1px solid #ddd;
+  margin: 5px 10px 5px 0;
+  padding: 10px;
+  color: white;
+}
+
+#story-form button:hover {
+  background-color: royalblue;
+}
+
+@media (max-width: 800px) {
+  #story-form input {
+    margin: 10px 0;
+  }
+
+  #story-form {
+    flex-direction: column;
+  }
+}
 
 /* responsive queries for tightening things up for mobile. */
 

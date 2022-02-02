@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 
 <!-- Hack or Snooze
-
      This is the only HTML page; the applications manipulates this DOM
      during use.
-
      Primary authors:
      - Michael Hueter: initial creation, 2018
      - Elie Schoppik: refactoring using OO, 2019
@@ -24,6 +22,7 @@
       href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
       integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
       crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="css/user.css">
   <link rel="stylesheet" href="css/stories.css">
@@ -37,6 +36,16 @@
   <div class="navbar-brand">
     <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
   </div>
+
+  <div class="navbar-tabs ">
+ 
+    <a class="nav-link hidden" href="#" id="nav-submit">Submit</a>
+ 
+    <a class="nav-link hidden" href="#" id="nav-favorits">Favorites</a> 
+ 
+    <a class="nav-link hidden" href="#" id="nav-my-stories">My Stories</a>
+  </div>
+ 
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
@@ -50,10 +59,26 @@
   <!-- loading message (removed by JS after stories loaded) -->
   <div id="stories-loading-msg">Loading&hellip;</div>
 
+  <!-- area for stories to be created-->
+  <form action=""  id="story-form" class="hidden"  > 
+    <input placeholder="Enter a story title here" id="story-title" />
+    <input placeholder="Enter a story author here" id="story-author" />
+    <input placeholder="Enter a story url here" id="story-url"  required type="url"  />
+    <!-- <button type="submit" id="nav-submit" >Submit</button> -->
+     <button type="submit" >Submit</button>
+    <hr >
+  </form> 
+
   <!-- List of all stories -->
   <ol id="all-stories-list" class="stories-list"></ol>
 
+  <!-- area for favorited stories -->
+  <ol id="favorites-list" class="stories-list hidden"></ol>
+  
+  <!-- area for user's stories -->
+  <ol id="my-stories-list"  class="stories-list hidden"></ol>
 </section>
+
 
 <!-- Login and signup forms -->
 <section class="account-forms-container container">

@@ -221,9 +221,9 @@ class User {
         method: "GET",
         params: { token },
       });
-
+      
       let { user } = response.data;
-
+       
       return new User(
         {
           username: user.username,
@@ -242,20 +242,27 @@ class User {
    
   /** favorite a story */
   //https://hack-or-snooze-v3.herokuapp.com/users/username/favorites/storyId
-  async addAFavorite(token,username, storyId){
+  async addAFavorite(token,username, storyId, user, story){
   //  console.log("######((()()()()" currentUser)
+   console.log("my user add1: ", this.favorites)
    await axios({
       url:`https://hack-or-snooze-v3.herokuapp.com/users/${username}/favorites/${storyId}`,
       method:'POST',
       params:{token}
     })
-     
+  
+   this.favorites=this.favorites.append(story)
+   
+   console.log("my user add1.5: ", this.favorites)
+   
     
   }
   
   /** unfavorite a story */
   //https://hack-or-snooze-v3.herokuapp.com/users/username/favorites/storyId
-  async removeAFavorite(token, username, storyId){
+  async removeAFavorite(token, username, storyId, user){
+    
+    console.log("my user add2: ", this.favorites)
      await axios({
       url:`https://hack-or-snooze-v3.herokuapp.com/users/${username}/favorites/${storyId}`,
       method:'DELETE',
@@ -263,6 +270,8 @@ class User {
     })
    
     
+   this.favorites= this.favorites.filter(u=>u.storyId!==storyId)
+   
   }
 
   /** get a user*/

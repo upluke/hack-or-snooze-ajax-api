@@ -170,7 +170,8 @@ async function toggleStoryFavorite(evt){
    
 }
 
-$allStoriesList.on('click', '#star_id', toggleStoryFavorite)
+// make star icons clickable in the main list and favorite list
+$allStoriesList.add($favoritesList).on('click', '#star_id', toggleStoryFavorite)
 
 /** generate user's favorites on page */
 async function addFavoritesOnPage(){

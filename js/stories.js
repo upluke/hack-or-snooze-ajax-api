@@ -32,7 +32,8 @@ function generateStoryMarkup(story,showDeleteBtn = false ) {
   
  
   // update trash icon and star icon depending on tab types
- 
+  let trashIconClass=''
+  let starIconClass=''  
   // const markedStar=favoritesIdCollection.indexOf(story.storyId)!==-1?'checked':''
   //|||||||||||||||||
   // if(type==='favorites'){
@@ -54,7 +55,7 @@ function generateStoryMarkup(story,showDeleteBtn = false ) {
         // <span id="trash_id" data-story-id="${story.storyId}" class="${trashIconClass}"></span>
         // <span id="star_id" data-story-id="${story.storyId}" class="${starIconClass}"></span> 
   const getDeleteBtnHTML=`
-      <span id="trash-id" data-story-id="${story.storyId}" class="fa fa-trash" >
+      <span id="trash_id" data-story-id="${story.storyId}" class="fa fa-trash" >
        
       </span>`
   const isFavorite = currentUser.isFavorite(story);
@@ -231,19 +232,17 @@ function displayMyStories(){
 
 $navMyStories.on('click', displayMyStories )
 
-
+ 
 /** delete a story */
 async function deleteAStory(evt){
- 
+  console.log("in delete")
   const storyId=evt.target.dataset.storyId
-  
-  
   await storyList.removeAStory(storyId, currentUser)
   
   addMyStoriesOnPage()
 }
 
-$(document).on('click','#trash_id', deleteAStory)
+$myStoriesList.on('click','#trash_id', deleteAStory)
 
 
 

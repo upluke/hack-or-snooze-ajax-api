@@ -24,39 +24,50 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
-function generateStoryMarkup(story,type ) {
+function generateStoryMarkup(story,showDeleteBtn = false ) {
   // console.debug("generateStoryMarkup", story);
- 
+  const showStar = Boolean(currentUser); 
 
   const hostName = story.getHostName();  
-  const favoritesIdCollection=localStorage.getItem("favoritesIds")===null?[]:localStorage.getItem("favoritesIds") 
+  
  
   // update trash icon and star icon depending on tab types
-  let trashIconClass=''
-  let starIconClass=''  
-  const markedStar=favoritesIdCollection.indexOf(story.storyId)!==-1?'checked':''
-  //|||||||||||||||||
-  if(type==='favorites'){
-    trashIconClass="fa fa-trash hidden"
-    starIconClass=`fa fa-star ${markedStar}`
-    
-  }else if(type==='myStories'){
-    trashIconClass="fa fa-trash"
-    starIconClass=`fa fa-star ${markedStar}`
-  }else{
-    if(currentUser){
-      trashIconClass="fa fa-trash hidden"
-      starIconClass=`fa fa-star ${markedStar}`
-    }else{
-      trashIconClass="fa fa-trash hidden"
-      starIconClass=`fa fa-star hidden`
-    }
-  }
  
+  // const markedStar=favoritesIdCollection.indexOf(story.storyId)!==-1?'checked':''
+  //|||||||||||||||||
+  // if(type==='favorites'){
+  //   trashIconClass="fa fa-trash hidden"
+  //   starIconClass=`fa fa-star ${markedStar}`
+    
+  // }else if(type==='myStories'){
+  //   trashIconClass="fa fa-trash"
+  //   starIconClass=`fa fa-star ${markedStar}`
+  // }else{
+  //   if(currentUser){
+  //     trashIconClass="fa fa-trash hidden"
+  //     starIconClass=`fa fa-star ${markedStar}`
+  //   }else{
+  //     trashIconClass="fa fa-trash hidden"
+  //     starIconClass=`fa fa-star hidden`
+  //   }
+  // }
+        // <span id="trash_id" data-story-id="${story.storyId}" class="${trashIconClass}"></span>
+        // <span id="star_id" data-story-id="${story.storyId}" class="${starIconClass}"></span> 
+  const getDeleteBtnHTML=`
+      <span id="trash-id" data-story-id="${story.storyId}" class="fa fa-trash" >
+       
+      </span>`
+  const isFavorite = currentUser.isFavorite(story);
+  const checked = isFavorite ? "checked" : "";
+  const getStarHTML=`
+      <span id="star_id" data-story-id="${story.storyId}" class="fa fa-star ${checked}">
+        
+      </span>`
+      
   return $(`
       <li id="${story.storyId}">
-        <span id="trash_id" data-story-id="${story.storyId}" class="${trashIconClass}"></span>
-        <span id="star_id" data-story-id="${story.storyId}" class="${starIconClass}"></span> 
+        ${showDeleteBtn ? getDeleteBtnHTML: ""}
+        ${showStar ? getStarHTML : ""}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -66,6 +77,8 @@ function generateStoryMarkup(story,type ) {
       </li>
     `);
 }
+
+ 
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
@@ -127,32 +140,36 @@ $('#story-form').on('submit', addNewStoryOnPage)
 
 /** add/remove fovirte to a story when star icon is clicked  */
 async function toggleStoryFavorite(evt){
-  console.log("in in")
-  console.log(currentUser)
+  
+  console.log($(event.target).hasClass('checked'), "!!!!!!!!!!!!")
+  
+  
   const token=currentUser.loginToken
   const username=currentUser.username
   const storyId=evt.target.dataset.storyId
   const story=storyList.stories.find(story=>story.storyId===storyId)
-  console.log($(this))
-  if ($(this).hasClass('checked')){
+  
+  if ($(event.target).hasClass('checked')){
     console.log("in 1")
-    $(this).removeClass('checked')
+    $(event.target).removeClass('checked')
    await currentUser.removeAFavorite(token, username, storyId, currentUser)
     
     
   }else{
     console.log("in 2")
-    $(this).addClass('checked')
+    $(event.target).addClass('checked')
+    console.log($(event.target).hasClass('checked'), "^^^^^^^^^^^")
    await currentUser.addAFavorite(token, username, storyId, currentUser, story)
-    console.log("after",$(this))
-    
-    // console.log("after",$(this))
+   
+   
   }
+  console.log($(event.target).hasClass('checked'), "^^^^^--^^^^^^")
+  console.log()
   addFavoritesOnPage()
    
 }
 
-$(document).on('click', '#star_id', toggleStoryFavorite)
+$allStoriesList.on('click', '#star_id', toggleStoryFavorite)
 
 /** generate user's favorites on page */
 async function addFavoritesOnPage(){
@@ -164,7 +181,7 @@ async function addFavoritesOnPage(){
  
   for(let favorite of currentUser.favorites){
     const storifiedFavObject=new Story(favorite)
-    const $favorite= generateStoryMarkup(storifiedFavObject, "favorites")
+    const $favorite= generateStoryMarkup(storifiedFavObject, true)
     
     $favoritesList.append($favorite)
   }
@@ -234,4 +251,4 @@ $(document).on('click','#trash_id', deleteAStory)
 
 // 1. class methods with static keyword can be accessed by class property even   
 // 2. what's the purpose of using static
-// 3. code after await won't be executed
+// 3. code after await won't be executed: console.log("after",$(this))

@@ -251,9 +251,9 @@ class User {
       params:{token}
     })
   
-   this.favorites=this.favorites.append(story)
-   
+   this.favorites.push(story);
    console.log("my user add1.5: ", this.favorites)
+  
    
     
   }
@@ -271,7 +271,7 @@ class User {
    
     
    this.favorites= this.favorites.filter(u=>u.storyId!==storyId)
-   
+   console.log("my user add2.5: ", this.favorites)
   }
 
   /** get a user*/
@@ -287,7 +287,9 @@ class User {
   //   return response
 
   // }
-
+  isFavorite(story) {
+    return this.favorites.some(s => (s.storyId === story.storyId));
+  }
 
 
 }

@@ -58,14 +58,17 @@ function generateStoryMarkup(story,showDeleteBtn = false ) {
       <span id="trash_id" data-story-id="${story.storyId}" class="fa fa-trash" >
        
       </span>`
+  let getStarHTML=`<span id="star_id" data-story-id="${story.storyId}" class="fa fa-star">
+        
+      </span>`
   if (showStar){
-        const isFavorite = currentUser.isFavorite(story);
-        const checked = isFavorite ? "checked" : "";
-        const getStarHTML=`
-            <span id="star_id" data-story-id="${story.storyId}" class="fa fa-star ${checked}">
-              
-            </span>`
-        }
+  const isFavorite = currentUser.isFavorite(story);
+  const checked = isFavorite ? "checked" : "";
+  getStarHTML=`
+      <span id="star_id" data-story-id="${story.storyId}" class="fa fa-star ${checked}">
+        
+      </span>`
+  }
       
       
   return $(`
@@ -147,7 +150,7 @@ async function toggleStoryFavorite(event){
   
   const token=currentUser.loginToken
   const username=currentUser.username
-  const storyId=evt.target.dataset.storyId
+  const storyId=event.target.dataset.storyId
   const story=storyList.stories.find(story=>story.storyId===storyId)
   
   if ($(event.target).hasClass('checked')){

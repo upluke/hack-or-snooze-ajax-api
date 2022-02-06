@@ -182,8 +182,7 @@ async function addFavoritesOnPage(){
   }
  
   for(let favorite of currentUser.favorites){
-    const storifiedFavObject=new Story(favorite)
-    const $favorite= generateStoryMarkup(storifiedFavObject, true)
+    const $favorite= generateStoryMarkup(favorite)
     
     $favoritesList.append($favorite)
   }

@@ -25,35 +25,13 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story,showDeleteBtn = false ) {
-  // console.debug("generateStoryMarkup", story);
+ 
   const showStar = Boolean(currentUser); 
 
   const hostName = story.getHostName();  
   
  
-  // update trash icon and star icon depending on tab types
-  let trashIconClass=''
-  let starIconClass=''  
-  // const markedStar=favoritesIdCollection.indexOf(story.storyId)!==-1?'checked':''
-  //|||||||||||||||||
-  // if(type==='favorites'){
-  //   trashIconClass="fa fa-trash hidden"
-  //   starIconClass=`fa fa-star ${markedStar}`
-    
-  // }else if(type==='myStories'){
-  //   trashIconClass="fa fa-trash"
-  //   starIconClass=`fa fa-star ${markedStar}`
-  // }else{
-  //   if(currentUser){
-  //     trashIconClass="fa fa-trash hidden"
-  //     starIconClass=`fa fa-star ${markedStar}`
-  //   }else{
-  //     trashIconClass="fa fa-trash hidden"
-  //     starIconClass=`fa fa-star hidden`
-  //   }
-  // }
-        // <span id="trash_id" data-story-id="${story.storyId}" class="${trashIconClass}"></span>
-        // <span id="star_id" data-story-id="${story.storyId}" class="${starIconClass}"></span> 
+ 
   const getDeleteBtnHTML=`
       <span id="trash_id" data-story-id="${story.storyId}" class="fa fa-trash" >
        
@@ -200,17 +178,7 @@ function displayFavorites(){
 $navFavorites.on('click', displayFavorites)
 
 
-
-// /** create user favrite list for look up*/
-
-// async function generateUserFavoriteList(){
-//   const aUserData=await User.getAUserData(currentUser.username, currentUser.loginToken)
-//   return aUserData.data.user.favorites.reduce((accu, curr)=>{
-//       accu.push(curr.storyId)
-//       return accu
-//    }, []) 
-  
-// }
+ 
 
 /** generate my stories */
 async function addMyStoriesOnPage( ){
@@ -253,4 +221,4 @@ $myStoriesList.on('click','#trash_id', deleteAStory)
 
 // 1. class methods with static keyword can be accessed by class property even   
 // 2. what's the purpose of using static
-// 3. code after await won't be executed: console.log("after",$(this))
+ 
